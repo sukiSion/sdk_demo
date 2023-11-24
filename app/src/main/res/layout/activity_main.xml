@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="tv_name , tv_mode , tv_id_card">
+    </androidx.constraintlayout.widget.Barrier>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="姓名: "
+        android:textSize="18sp"
+        android:id="@+id/tv_name">
+    </TextView>
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/tv_name"
+        app:layout_constraintBottom_toBottomOf="@id/tv_name"
+        app:layout_constraintStart_toEndOf="@id/barrier"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="廖梓健"
+        app:layout_constraintEnd_toEndOf="parent">
+    </EditText>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        android:id="@+id/barrier1"
+        app:constraint_referenced_ids="tv_name , et_name">
+    </androidx.constraintlayout.widget.Barrier>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_mode"
+        app:layout_constraintBottom_toBottomOf="@id/et_mode"
+        android:text="模式: "
+        android:textSize="18sp"
+        android:id="@+id/tv_mode">
+    </TextView>
+
+    <EditText
+        android:id="@+id/et_mode"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/barrier1"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/barrier"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="66"
+        android:enabled="false">
+    </EditText>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        android:id="@+id/barrier2"
+        app:constraint_referenced_ids="tv_mode , et_mode">
+    </androidx.constraintlayout.widget.Barrier>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_id_card"
+        app:layout_constraintBottom_toBottomOf="@id/et_id_card"
+        android:text="证件号: "
+        android:textSize="18sp"
+        android:id="@+id/tv_id_card">
+    </TextView>
+
+    <EditText
+        android:id="@+id/et_id_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/barrier2"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/barrier"
+        android:layout_marginStart="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="441283200009123615"
+        android:layout_marginEnd="20dp">
+    </EditText>
+
+    <Button
+        android:id="@+id/bt_auth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:text="直接认证"
+        app:layout_constraintTop_toBottomOf="@id/et_id_card">
+    </Button>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:id="@+id/tv_auth_result"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/bt_auth"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+    </TextView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
