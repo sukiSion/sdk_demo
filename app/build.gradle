@@ -19,13 +19,13 @@ android {
 
     signingConfigs {
         release{
-            storeFile file("E:\\Sion_Demo\\key\\sdk_demo.jks")
+            storeFile file("C:\\Application\\sdk_demo\\gradle\\sdk_demo.jks")
             storePassword "sion1234"
             keyAlias "sdkDemo"
             keyPassword "sion1234"
         }
         debug{
-            storeFile file("E:\\Sion_Demo\\key\\sdk_demo.jks")
+            storeFile file("C:\\Application\\sdk_demo\\gradle\\sdk_demo.jks")
             storePassword "sion1234"
             keyAlias "sdkDemo"
             keyPassword "sion1234"

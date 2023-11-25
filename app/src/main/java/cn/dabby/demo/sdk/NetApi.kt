@@ -37,9 +37,11 @@ object NetApi {
     }
 
     fun requestAccessToken(
-        onFail: () -> Unit,
+        onStart: () -> Unit,
+        onFail: (message: String) -> Unit,
         onSuccess: (mAccessToken: String) -> Unit
     ){
+        onStart()
         OkHttpClient.getOkHttpClient().newCall(
            Request.Builder()
                .url(Uri.parse("${TEST}getaccesstoken").buildUpon()
@@ -55,7 +57,7 @@ object NetApi {
         ).enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("reponseAccessToken" , "onFailure")
-                onFail()
+                onFail(e.stackTraceToString())
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -68,7 +70,8 @@ object NetApi {
                         val mAccessToken = jsonObject.getString("accessToken")
                         onSuccess(mAccessToken)
                     }else{
-                        onFail()
+                        val retMessage = jsonObject.getString("retMessage")
+                        onFail(retMessage)
                     }
                 }catch (e: JSONException){
                     e.printStackTrace()
@@ -81,7 +84,7 @@ object NetApi {
         accessToken: String,
         fullName: String,
         idNum: String,
-        onFail: () -> Unit,
+        onFail: (message: String) -> Unit,
         onSuccess: (certToken: String, timeStamp: String, authMode: Int) -> Unit
     ){
         OkHttpClient.getOkHttpClient().newCall(
@@ -101,7 +104,7 @@ object NetApi {
                 .build()
         ).enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {
-                onFail()
+                onFail(e.stackTraceToString())
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -118,7 +121,8 @@ object NetApi {
                         val timeStamp = tokenInfo.getString("timestamp")
                         onSuccess(certToken , timeStamp , authMode)
                     }else{
-                        onFail()
+                        val retMessage = jsonObject.getString("retMessage")
+                        onFail(retMessage)
                     }
                 }catch (e: JSONException){
                     e.printStackTrace()
@@ -131,7 +135,7 @@ object NetApi {
         accessToken: String,
         certToken: String,
         timeStamp: String,
-        onFail: () -> Unit,
+        onFail: (message: String) -> Unit,
         onSuccess: (certTokenSignature: String) -> Unit
     ){
         OkHttpClient.getOkHttpClient().newCall(
@@ -147,7 +151,7 @@ object NetApi {
                 .build()
         ).enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {
-                onFail()
+                onFail(e.stackTraceToString())
             }
 
             override fun onResponse(call: Call, response: Response) {

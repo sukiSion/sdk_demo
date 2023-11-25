@@ -10,6 +10,7 @@ import android.os.IBinder
 import android.os.Process
 import android.os.RemoteException
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,8 +21,6 @@ import cn.weijing.sdk.wiiauth.IWiiAuthAidlInterface
 import cn.weijing.sdk.wiiauth.entities.AuthRequestContent
 import cn.weijing.sdk.wiiauth.entities.AuthResultContent
 import cn.weijing.sdk.wiiauth.entities.WiiAuthConfigBean
-import java.lang.ref.WeakReference
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,17 +28,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var wiiAuthInterface: IWiiAuthAidlInterface
     private  val activityResultLauncher: ActivityResultLauncher<String> by lazy {
         registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ){
-            if(!it){
+            ActivityResultContracts.RequestPermission(),
+        ) {
+            grant ->
+            if(!grant){
                 Toast.makeText(this , "请给予相机权限" , Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    class IdAuthAidlListener(
-        val activityRef: WeakReference<AppCompatActivity>
-    ): IIdAuthAidlListener.Stub() {
+
+
+     inner class IdAuthAidlListener: IIdAuthAidlListener.Stub() {
 
         override fun onAuthResult(p0: AuthResultContent?) {
             p0?.let {
@@ -49,11 +49,9 @@ class MainActivity : AppCompatActivity() {
                     it.retMessage,
                     it.certToken
                 )
-                activityRef.get()?.let {
-                        Toast.makeText(it , logStr, Toast.LENGTH_SHORT).show()
-
+                runOnUiThread {
+                    this@MainActivity.activityMainBinding.tvAuthResult.text = logStr
                 }
-
             }
         }
     }
@@ -74,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                             it.setH("test")
                         }
                     )
-                    wiiAuthInterface.setIdAuthResultCallback(IdAuthAidlListener(WeakReference(this@MainActivity)))
+                    wiiAuthInterface.setIdAuthResultCallback(IdAuthAidlListener())
                 }catch (e: RemoteException){
                     e.printStackTrace()
                 }
@@ -84,6 +82,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,8 +103,12 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             NetApi.requestAccessToken(
+                onStart = {
+                    showLoading()
+                },
                 onFail = {
-
+                    cancelLoading()
+                    showFailMessage(it)
                 }
             ){
                 accessToken ->
@@ -116,7 +120,8 @@ class MainActivity : AppCompatActivity() {
                         fullName = fullName,
                         idNum = idNum,
                         onFail = {
-
+                            cancelLoading()
+                            showFailMessage(it)
                         }
                     ){
                             certToken: String, timeStamp: String, authMode: Int ->
@@ -124,11 +129,13 @@ class MainActivity : AppCompatActivity() {
                             accessToken,
                             certToken,
                             timeStamp,
-                            {
-
+                            onFail = {
+                                cancelLoading()
+                                showFailMessage(it)
                             }
                         ){
                             certTokenSignature ->
+                            cancelLoading()
                             if(this::wiiAuthInterface.isInitialized){
                                 Log.d("Sion", "人脸启动")
                                 wiiAuthInterface.launchAuth(AuthRequestContent().also {
@@ -148,6 +155,27 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun showLoading(){
+        runOnUiThread {
+            activityMainBinding.clLoading.apply {
+                setOnClickListener(null)
+                visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun cancelLoading(){
+        runOnUiThread {
+            activityMainBinding.clLoading.visibility = View.GONE
+        }
+    }
+
+    private fun showFailMessage(message : String){
+        runOnUiThread {
+            activityMainBinding.tvAuthResult.text = message
         }
     }
 }
